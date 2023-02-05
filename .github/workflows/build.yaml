@@ -23,4 +23,4 @@ jobs:
                 libwww-perl \
                 libgnutls28-dev
       - run: bash install.sh
-      - run: ls
+      - run: ls -la

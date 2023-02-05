@@ -4,7 +4,7 @@ set -e
 # Set this to the version of InspIRCd to install
 INSTALL_VERSION="3.8.1"
 
-BASE_DIR=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
+BASE_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/run"
 
 vendor_extra() {
     ./configure --enable-extra "${1}"
@@ -59,8 +59,8 @@ install() {
     apply_patches
 
     export CXXFLAGS="-std=c++11"
-    ./configure --disable-auto-extras --prefix ${BASE_DIR}
-    make clean && make --jobs $(nproc) && make install
+    ./configure --disable-auto-extras --prefix "${BASE_DIR}"
+    make clean && make --jobs "$(nproc)" && make install
 }
 
 if [ $# -ne 0 ]; then
