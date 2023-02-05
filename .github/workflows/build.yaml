@@ -11,5 +11,16 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v3
+      - run: sudo apt update -y -qq
+      - run: |
+          sudo apt install -y -qq --no--install-recommends \
+                build-essential \
+                bison \
+                flex \
+                libssl-dev \
+                pkg-config \
+                libpcre3-dev \
+                libwww-perl \
+                libgnutls28-dev
       - run: bash install.sh
       - run: ls
