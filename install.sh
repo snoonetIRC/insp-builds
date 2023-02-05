@@ -4,7 +4,8 @@ set -e
 # Set this to the version of InspIRCd to install
 INSTALL_VERSION="3.8.1"
 
-BASE_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/run"
+BASE_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+BUILD_PREFIX="${BASE_DIR}/run"
 
 vendor_extra() {
     ./configure --enable-extra "${1}"
@@ -52,14 +53,14 @@ install() {
     version="${1}"
     version_name="inspircd-${version}"
     url="https://codeload.github.com/inspircd/inspircd/tar.gz/v${version}"
-    [ -d "${BASE_DIR}/${version_name}" ] && rm -r "${BASE_DIR}/${version_name}"
+    [ -d "${BASE_DIR}/${version_name}" ] && rm -r "${BASE_DIR:?}/${version_name}"
     wget -O - "${url}" | tar zx
     cd "${BASE_DIR}/${version_name}"
     install_extras
     apply_patches
 
     export CXXFLAGS="-std=c++11"
-    ./configure --disable-auto-extras --prefix "${BASE_DIR}"
+    ./configure --disable-auto-extras --prefix "${BUILD_PREFIX}"
     make clean && make --jobs "$(nproc)" && make install
 }
 
