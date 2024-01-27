@@ -36,13 +36,15 @@ jobs:
                 libgnutls28-dev
       - name: Build Inspircd ${{matrix.version}}
         run: bash install.sh ${{matrix.version}}
+      - name: Archive Artifacts
+        run: tar cvzf inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz run/
       - id: commit
         uses: prompt/actions-commit-hash@v3
       - name: Upload archives
         uses: actions/upload-artifact@v4
         with:
           name: inspircd.${{matrix.version}}.${{matrix.os}}
-          path: run/
+          path: inspircd*.tar.gz
           if-no-files-found: error
   release:
     needs: build
@@ -50,9 +52,6 @@ jobs:
     steps:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v4
-      - name: Archive Artifacts
-        run: |
-          find . -depth 1 -name 'inspircd.*' -type d -exec tar cvzf {}.tar.gz {}/
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -61,4 +60,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            inspircd.*.tar.gz
+            inspircd*.tar.gz
