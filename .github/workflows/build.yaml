@@ -43,6 +43,7 @@ jobs:
         with:
           path: inspircd-${{matrix.version}}/build/
           key: inspircd-${{matrix.version}}-${{matrix.os}}-build
+      - run: ls inspircd-${{matrix.version}}
       - name: Build Inspircd ${{matrix.version}}
         run: bash install.sh ${{matrix.version}}
       - name: Archive Artifacts
