@@ -38,11 +38,27 @@ jobs:
         run: bash install.sh ${{matrix.version}}
       - id: commit
         uses: prompt/actions-commit-hash@v3
-      - name: Archive build artifacts
-        run: tar cvzf inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz run/
       - name: Upload archives
         uses: actions/upload-artifact@v4
         with:
-          name: inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz
-          path: inspircd*.tar.gz
+          name: inspircd.${{matrix.version}}.${{matrix.os}}
+          path: run/
           if-no-files-found: error
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v4
+      - name: Archive Artifacts
+        run: |
+          find . -depth 1 -name 'inspircd.*' -type d -exec tar cvzf {}.tar.gz {}/
+      - name: Create Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            inspircd.*.tar.gz
