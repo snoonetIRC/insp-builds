@@ -34,6 +34,15 @@ jobs:
                 libpcre3-dev \
                 libwww-perl \
                 libgnutls28-dev
+      - name: Download Source
+        run: |
+          wget -O - "https://codeload.github.com/inspircd/inspircd/tar.gz/v${{matrix.version}}" | tar xz
+      - name: Cache Build Files
+        id: cache-build
+        uses: actions/cache@v4
+        with:
+          path: inspircd-${{matrix.version}}/build/
+          key: inspircd-${{matrix.version}}-${{matrix.os}}-build
       - name: Build Inspircd ${{matrix.version}}
         run: bash install.sh ${{matrix.version}}
       - name: Archive Artifacts
@@ -43,7 +52,7 @@ jobs:
       - name: Upload archives
         uses: actions/upload-artifact@v4
         with:
-          name: inspircd.${{matrix.version}}.${{matrix.os}}
+          name: inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz
           path: inspircd*.tar.gz
           if-no-files-found: error
   release:

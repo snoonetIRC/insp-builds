@@ -44,16 +44,13 @@ install_extras() {
 install() {
     version="${1}"
     version_name="inspircd-${version}"
-    url="https://codeload.github.com/inspircd/inspircd/tar.gz/v${version}"
-    [ -d "${BASE_DIR:?}/${version_name}" ] && rm -r "${BASE_DIR:?}/${version_name}"
-    wget -O - "${url}" | tar zx
     cd "${BASE_DIR:?}/${version_name}"
     install_extras
     apply_patches
 
     export CXXFLAGS="-std=c++11"
     ./configure --disable-auto-extras --prefix "${BASE_DIR:?}/run"
-    make clean && make --jobs "$(nproc)" && make install
+    make --jobs "$(nproc)" && make install
 }
 
 VERSION="${1}"
