@@ -37,19 +37,10 @@ jobs:
       - name: Download Source
         run: |
           wget -O - "https://codeload.github.com/inspircd/inspircd/tar.gz/v${{matrix.version}}" | tar xz
-      - name: Cache Build Files
-        id: cache-build
-        uses: actions/cache@v4
-        with:
-          path: inspircd-${{matrix.version}}/build/
-          key: inspircd-${{matrix.version}}-${{matrix.os}}-build
-      - run: ls inspircd-${{matrix.version}}
       - name: Build Inspircd ${{matrix.version}}
         run: bash install.sh ${{matrix.version}}
       - name: Archive Artifacts
-        run: tar cvzf inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz run/
-      - id: commit
-        uses: prompt/actions-commit-hash@v3
+        run: tar cvzf inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz run/*
       - name: Upload archives
         uses: actions/upload-artifact@v4
         with:
@@ -60,15 +51,17 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v4
-      - run: ls -R
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
+          automatic_release_tag: "${{steps.date.outputs.date}}"
+          prerelease: false
+          title: "Build ${{steps.date.outputs.date}}"
           files: |
             inspircd*/inspircd*.tar.gz
