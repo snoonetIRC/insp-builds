@@ -34,8 +34,8 @@ jobs:
       - run: bash install.sh ${{matrix.version}}
       - id: commit
         uses: prompt/actions-commit-hash@v3
-      - run: tar cvzf inspircd.${{matrix.version}}-${{steps.commit.outputs.short}}.${{matrix.os}}.tar.gz run/
+      - run: tar cvzf inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz run/
       - uses: actions/upload-artifact@v4
         with:
-          path: inspircd*.tar.gz
+          path: inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz
           if-no-files-found: error
