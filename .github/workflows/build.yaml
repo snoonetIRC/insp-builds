@@ -19,9 +19,12 @@ jobs:
           - "ubuntu-20.04"
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - run: sudo apt update -y -qq
-      - run: |
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Update apt index
+        run: sudo apt update -y -qq
+      - name: Install dependency packages
+        run: |
           sudo apt install -y -qq --no-install-recommends \
                 build-essential \
                 bison \
@@ -31,11 +34,15 @@ jobs:
                 libpcre3-dev \
                 libwww-perl \
                 libgnutls28-dev
-      - run: bash install.sh ${{matrix.version}}
+      - name: Build Inspircd ${{matrix.version}}
+        run: bash install.sh ${{matrix.version}}
       - id: commit
         uses: prompt/actions-commit-hash@v3
-      - run: tar cvzf inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz run/
-      - uses: actions/upload-artifact@v4
+      - name: Archive build artifacts
+        run: tar cvzf inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz run/
+      - name: Upload archives
+        uses: actions/upload-artifact@v4
         with:
-          path: inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz
+          name: inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz
+          path: inspircd*.tar.gz
           if-no-files-found: error
