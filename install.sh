@@ -51,6 +51,7 @@ install() {
     export CXXFLAGS="-std=c++11"
     ./configure --disable-auto-extras --prefix "${BASE_DIR:?}/run" --portable
     make --jobs "$(nproc)" && make install
+    mv run ../run
 }
 
 VERSION="${1}"
