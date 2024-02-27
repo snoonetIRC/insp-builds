@@ -3,6 +3,8 @@ set -e
 
 BASE_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 install() {
+    local version="$1"
+    cd "anope-$version" || exit 1
     ls -la
     return
 }
