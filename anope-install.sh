@@ -39,6 +39,7 @@ install() {
     install_extras
     cat << EOF > config.cache
 UMASK=022
+INSTDIR="$PWD/services"
 EOF
 
     export CXXFLAGS="-std=c++11"
