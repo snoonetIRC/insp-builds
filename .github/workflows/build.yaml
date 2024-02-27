@@ -48,8 +48,63 @@ jobs:
           name: inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz
           path: inspircd*.tar.gz
           if-no-files-found: error
+  build-anope:
+    strategy:
+      matrix:
+        version:
+          - "2.0.12"
+          - "2.0.13"
+          - "2.0.14"
+          - "2.0.15"
+        os:
+          - "ubuntu-22.04"
+          - "ubuntu-20.04"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Update apt index
+        run: sudo apt update -y -qq
+      - name: Install dependency packages
+        run: |
+          sudo apt install -y -qq --no-install-recommends \
+                build-essential \
+                bison \
+                flex \
+                libssl-dev \
+                pkg-config \
+                libpcre3-dev \
+                libwww-perl \
+                libgnutls28-dev \
+                make \
+                cmake \
+                libmysqlclient-dev
+
+      - name: Download source
+        run: |
+          wget -O - "https://codeload.github.com/anope/anope/tar.gz/${{matrix.version}}" | tar xz
+
+      - name: Download Snoonet Module Source
+        working-directory: "anope-${{matrix.version}}/"
+        run: |
+          wget -O - "https://codeload.github.com/snoonetIRC/anope-modules/tar.gz/master" | tar xz
+
+      - name: Build Anope ${{matrix.version}}
+        run: bash anope-install.sh ${{matrix.version}}
+
+      - name: Archive Artifacts
+        working-directory: run
+        run: tar cvzf ../anope.${{matrix.version}}.${{matrix.os}}.tar.gz ./*
+
+      - name: Upload archives
+        uses: actions/upload-artifact@v4
+        with:
+          name: anope.${{matrix.version}}.${{matrix.os}}.tar.gz
+          path: anope.${{matrix.version}}.${{matrix.os}}.tar.gz
+          if-no-files-found: error
+
   release:
-    needs: build
+    needs: [build, build-anope]
     runs-on: ubuntu-latest
     steps:
       - name: Get current date
@@ -66,3 +121,4 @@ jobs:
           title: "Build ${{steps.date.outputs.date}}"
           files: |
             inspircd*/inspircd*.tar.gz
+            anope*/anope*.tar.gz

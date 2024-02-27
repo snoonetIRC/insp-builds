@@ -54,11 +54,6 @@ install() {
     mv run ../run
 }
 
-VERSION="${1}"
-
-if [ "${VERSION}""x" = "x" ]; then
-    echo "No install version specified, exiting..."
-    exit 1
-fi
+VERSION="${1?No install version specified, exiting...}"
 
 install "${VERSION}"
