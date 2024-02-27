@@ -41,8 +41,6 @@ install() {
 UMASK=022
 EOF
 
-    install_extras
-
     export CXXFLAGS="-std=c++11"
     ./Config -nointro -quick
     cd build || exit 1
