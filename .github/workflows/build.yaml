@@ -90,11 +90,13 @@ jobs:
           wget -O - "https://codeload.github.com/snoonetIRC/anope-modules/tar.gz/master" | tar xz
 
       - name: Build Anope ${{matrix.version}}
-        run: bash anope-install.sh ${{matrix.version}}
+        run: |
+          bash anope-install.sh ${{matrix.version}}
+          ls -la "anope-${{matrix.version}}"
 
       - name: Archive Artifacts
-        working-directory: run
-        run: tar cvzf ../anope.${{matrix.version}}.${{matrix.os}}.tar.gz ./*
+        working-directory: anope-${{matrix.version}}/services
+        run: tar cvzf ../../anope.${{matrix.version}}.${{matrix.os}}.tar.gz ./*
 
       - name: Upload archives
         uses: actions/upload-artifact@v4
