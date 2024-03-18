@@ -49,7 +49,7 @@ install() {
     apply_patches
 
     export CXXFLAGS="-std=c++11"
-    ./configure --disable-auto-extras --prefix "${BASE_DIR:?}/run" --portable
+    ./configure --disable-auto-extras --portable
     make --jobs "$(nproc)" && make install
     mv run ../run
 }
