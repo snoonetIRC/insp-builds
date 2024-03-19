@@ -132,12 +132,22 @@ jobs:
     needs: [build-inspircd, build-anope]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H%M%S')"
 
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Generate checksum files
+        run: |
+          find artifacts -type f -name '*.tar.gz' \
+            -execdir ci/make-sum-files.sh {} \;
 
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -147,5 +157,4 @@ jobs:
           prerelease: false
           title: "Build ${{steps.date.outputs.date}}"
           files: |
-            inspircd*/inspircd*.tar.gz
-            anope*/anope*.tar.gz
+            artifacts/**/*
