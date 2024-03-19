@@ -146,8 +146,8 @@ jobs:
 
       - name: Generate checksum files
         run: |
-          find artifacts -type f -name '*.tar.gz' \
-            -execdir ci/make-sum-files.sh {} \;
+          find artifacts -type f -name '*.tar.gz' -print0 \
+            | xargs -0L1 ci/make-sum-file.sh
 
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
