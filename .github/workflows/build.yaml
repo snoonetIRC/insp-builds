@@ -34,13 +34,10 @@ jobs:
         run: |
           sudo apt install -y -qq --no-install-recommends \
                 build-essential \
-                bison \
-                flex \
                 libssl-dev \
                 pkg-config \
                 libpcre3-dev \
-                libwww-perl \
-                libgnutls28-dev
+                libwww-perl
 
       - name: Download Source
         run: |
@@ -86,13 +83,10 @@ jobs:
         run: |
           sudo apt install -y -qq --no-install-recommends \
                 build-essential \
-                bison \
-                flex \
                 libssl-dev \
                 pkg-config \
                 libpcre3-dev \
                 libwww-perl \
-                libgnutls28-dev \
                 make \
                 cmake \
                 libmysqlclient-dev

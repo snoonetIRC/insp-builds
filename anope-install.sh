@@ -27,7 +27,6 @@ install_extras() {
     add_snoonet_module 'os_save.cpp'
 
     add_vendor_extra 'm_mysql.cpp'
-    add_vendor_extra 'm_ssl_gnutls.cpp'
     add_vendor_extra 'm_ssl_openssl.cpp'
     add_vendor_extra 'm_regex_posix.cpp'
     add_vendor_extra 'm_regex_pcre.cpp'
