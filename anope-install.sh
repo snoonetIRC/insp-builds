@@ -24,6 +24,7 @@ install_extras() {
     add_snoonet_module 'snoo_types.h'
     add_snoonet_module 'm_token_auth.h'
     add_snoonet_module 'm_register_api'
+    add_snoonet_module 'os_save.cpp'
 
     add_vendor_extra 'm_mysql.cpp'
     add_vendor_extra 'm_ssl_gnutls.cpp'
