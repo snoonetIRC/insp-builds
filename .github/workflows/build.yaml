@@ -8,57 +8,57 @@ on:
       - main
 
 jobs:
-  build-inspircd:
-    strategy:
-      matrix:
-        version:
-          - "3.18.0"
-          - "3.17.0"
-        os:
-          - "ubuntu-24.04"
-          - "ubuntu-22.04"
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  # build-inspircd:
+  #   strategy:
+  #     matrix:
+  #       version:
+  #         - "3.18.0"
+  #         - "3.17.0"
+  #       os:
+  #         - "ubuntu-24.04"
+  #         - "ubuntu-22.04"
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          create-symlink: true
-          key: "${{github.job}}-${{matrix.os}}-${{matrix.version}}"
+  #     - name: ccache
+  #       uses: hendrikmuhs/ccache-action@v1.2
+  #       with:
+  #         create-symlink: true
+  #         key: "${{github.job}}-${{matrix.os}}-${{matrix.version}}"
 
-      - name: Update apt index
-        run: sudo apt update -y -qq
+  #     - name: Update apt index
+  #       run: sudo apt update -y -qq
 
-      - name: Install dependency packages
-        run: |
-          sudo apt install -y -qq --no-install-recommends \
-                build-essential \
-                libssl-dev \
-                pkg-config \
-                libpcre3-dev \
-                libwww-perl
+  #     - name: Install dependency packages
+  #       run: |
+  #         sudo apt install -y -qq --no-install-recommends \
+  #               build-essential \
+  #               libssl-dev \
+  #               pkg-config \
+  #               libpcre3-dev \
+  #               libwww-perl
 
-      - name: Download Source
-        run: |
-          wget -O - "https://codeload.github.com/inspircd/inspircd/tar.gz/v${{matrix.version}}" | tar xz
+  #     - name: Download Source
+  #       run: |
+  #         wget -O - "https://codeload.github.com/inspircd/inspircd/tar.gz/v${{matrix.version}}" | tar xz
 
-      - name: Build Inspircd ${{matrix.version}}
-        run: bash install.sh ${{matrix.version}}
+  #     - name: Build Inspircd ${{matrix.version}}
+  #       run: bash install.sh ${{matrix.version}}
 
-      - name: Archive Artifacts
-        working-directory: run
-        run: |
-          ls -la
-          tar cvzf ../inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz ./*
+  #     - name: Archive Artifacts
+  #       working-directory: run
+  #       run: |
+  #         ls -la
+  #         tar cvzf ../inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz ./*
 
-      - name: Upload archives
-        uses: actions/upload-artifact@v4
-        with:
-          name: inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz
-          path: inspircd*.tar.gz
-          if-no-files-found: error
+  #     - name: Upload archives
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: inspircd.${{matrix.version}}.${{matrix.os}}.tar.gz
+  #         path: inspircd*.tar.gz
+  #         if-no-files-found: error
   build-anope:
     strategy:
       matrix:
@@ -120,7 +120,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    needs: [build-inspircd, build-anope]
+    needs: [build-anope]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
