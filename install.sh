@@ -30,7 +30,6 @@ install_extras() {
 
     # Modules that are in inspircd-contrib.
     ./modulemanager upgrade
-    third_extra 'm_asciiswitch'
     third_extra 'm_cve_2024_39844'
     third_extra 'm_dccblock'
     third_extra 'm_join0'
